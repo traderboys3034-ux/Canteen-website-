@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SAINIK CANTEEN BIKRAM - Complete Single-File Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { background-color: #020617; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
+    .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(12px); }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans pb-16">
+
+  <!-- TOP NOTICE BAR -->
+  <div class="bg-amber-500 text-slate-950 text-xs font-bold py-1.5 px-4 text-center tracking-wide flex items-center justify-center gap-2">
+    <span>🎖️ SAINIK CANTEEN BIKRAM (सैनिक कैंटीन वेलफेयर) • SAVING THE MONEY</span>
+    <span class="hidden md:inline">• 📍 Naya Pul, Bikram, Bihar | 📞 +91 95086 00190</span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-900/90 border-b border-amber-500/30 glass px-4 py-3 shadow-xl">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full border-2 border-amber-400 bg-slate-800 flex items-center justify-center font-serif text-amber-400 font-bold text-lg shadow-md">
+          SC
+        </div>
+        <div>
+          <h1 class="text-lg font-bold font-serif text-white tracking-tight">SAINIK CANTEEN BIKRAM</h1>
+          <p class="text-[11px] text-amber-400 font-bold uppercase tracking-wider">SAVING THE MONEY</p>
+        </div>
+      </div>
+
+      <!-- SEARCH BAR -->
+      <div class="flex-1 max-w-md hidden sm:block">
+        <div class="relative">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search 2800+ products (mixi, freeze, oil, tea...)..."
+            class="w-full bg-slate-950 text-slate-100 pl-9 pr-4 py-2 rounded-xl border border-slate-800 text-xs focus:outline-none focus:border-amber-400"
+            oninput="filterProducts()"
+          />
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="flex items-center gap-3">
+        <a href="https://maps.app.goo.gl/eytMgvVEb97g95FLA?g_st=awb" target="_blank" class="hidden lg:flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-amber-300 px-3 py-1.5 rounded-xl border border-slate-700 text-xs font-semibold">
+          <i class="fa-solid fa-location-dot text-amber-400"></i> Map Location
+        </a>
+        <button onclick="toggleCart()" class="relative bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-2 shadow-lg transition-all">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span>Cart</span>
+          <span id="cartBadge" class="bg-slate-950 text-amber-400 text-[10px] px-1.5 py-0.5 rounded-full font-bold">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- MOBILE SEARCH -->
+    <div class="mt-2 sm:hidden">
+      <div class="relative">
+        <input
+          type="text"
+          id="mobileSearchInput"
+          placeholder="Search products..."
+          class="w-full bg-slate-950 text-slate-100 pl-9 pr-4 py-2 rounded-xl border border-slate-800 text-xs focus:outline-none focus:border-amber-400"
+          oninput="syncMobileSearch()"
+        />
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- CATEGORY FILTER BAR -->
+  <div class="bg-slate-900 border-b border-slate-800 py-3 px-4 shadow-inner overflow-x-auto">
+    <div class="max-w-7xl mx-auto flex items-center gap-2" id="categoryContainer">
+      <!-- Generated via JS -->
+    </div>
+  </div>
+
+  <!-- MAIN CATALOGUE CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-6">
+    <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <div>
+        <h2 class="text-xl font-bold font-serif text-white flex items-center gap-2">
+          <span>Complete Product Catalogue</span>
+          <span id="productCountBadge" class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full font-mono font-semibold"></span>
+        </h2>
+        <p class="text-xs text-slate-400 mt-0.5">Special canteen savings store • Naya Pul, Bikram, Bihar</p>
+      </div>
+      <a href="https://wa.me/919508600190" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow">
+        <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp Support
+      </a>
+    </div>
+
+    <!-- PRODUCT GRID -->
+    <div id="productGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+      <!-- Generated via JS -->
+    </div>
+  </main>
+
+  <!-- CART DRAWER MODAL -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex justify-end">
+    <div class="w-full max-w-md bg-slate-900 h-full border-l border-slate-800 flex flex-col p-5 shadow-2xl">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-cart-shopping text-amber-400"></i> Shopping Cart
+        </h3>
+        <button onclick="toggleCart()" class="p-2 text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="cartItemsList" class="flex-1 overflow-y-auto py-4 space-y-3">
+        <!-- Generated via JS -->
+      </div>
+
+      <div class="pt-4 border-t border-slate-800 space-y-3">
+        <div class="flex justify-between text-sm font-bold text-white">
+          <span>Estimated Total:</span>
+          <span id="cartTotalPrice" class="text-amber-400 font-mono text-base">₹0</span>
+        </div>
+        <button onclick="sendCartWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center gap-2 shadow-lg">
+          <i class="fa-brands fa-whatsapp text-base"></i> Send Order via WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/919508600190" target="_blank" class="fixed bottom-5 right-5 z-40 bg-emerald-600 text-white p-3.5 rounded-full shadow-2xl border-2 border-amber-400 flex items-center gap-2 hover:scale-110 transition-transform">
+    <i class="fa-brands fa-whatsapp text-2xl text-amber-300"></i>
+  </a>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 bg-slate-950 border-t border-slate-800 py-8 px-4 text-center text-xs text-slate-400 space-y-2">
+    <p class="font-bold text-white">SAINIK CANTEEN BIKRAM (सैनिक कैंटीन वेलफेयर)</p>
+    <p>Naya Pul, Bikram, Bihar – 801104 | Phone: +91 95086 00190</p>
+    <p class="text-[11px] text-slate-500">Standalone Single-File Web Application Bundle. All Rights Reserved.</p>
+  </footer>
+
+  <script>
+    const ALL_PRODUCTS = [{"id":"SC-CLE-11001","name":"Surf Excel Easy Wash Detergent Powder 5 Kg Pack","category":"Cleaning","subcategory":"Detergents","brand":"Surf Excel","price":580,"originalPrice":720,"discount":19,"sku":"SKU-CLE-001","image":"https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":130,"description":"Removes tough stains like grease, ink, oil, and curry in half the time and effort.","features":["5 Kg Value Bag","Super Fine Powder Dissolution","Color Protection","Gentle on Hands"],"specifications":{"Weight":"5 Kg","Format":"Powder","Shelf Life":"24 Months"},"featured":true,"newArrival":false},{"id":"SC-CLO-6001","name":"Mens Military Grade Olive Green Tactical Cotton Shirt","category":"Clothing","subcategory":"Shirts","brand":"Sainik Wear","price":699,"originalPrice":1299,"discount":46,"sku":"SKU-CLO-001","image":"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":45,"description":"Heavy duty breathable cotton twill shirt with dual chest flap pockets and reinforced stitching.","features":["100% Cotton Twill","Reinforced Elbow Flaps","Dual Button Pockets","Army Green Finish"],"specifications":{"Sizes Available":"M, L, XL, XXL","Wash Care":"Machine Wash","Fit":"Regular Fit"},"featured":true,"newArrival":true},{"id":"SC-CLO-6002","name":"Microfiber Extra Soft Bath Towel Set 500 GSM (Pack of 2)","category":"Clothing","subcategory":"Towels & Bedding","brand":"Trident","price":499,"originalPrice":999,"discount":50,"sku":"SKU-CLO-002","image":"https://images.unsplash.com/photo-1616627547584-bf28cee262db?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":80,"description":"Super absorbent high-density 500 GSM bath towels with quick dry technology.","features":["500 GSM High Density","Super Absorbent","Quick Drying","Anti-Bacterial Fabric"],"specifications":{"Dimensions":"70x140 cm","Color":"Navy Blue & Dark Olive","Count":"2 Towels"},"featured":false,"newArrival":false},{"id":"SC-ELE-1001","name":"Samsung 43 Inch Crystal 4K Ultra HD Smart LED TV","category":"Electronics","subcategory":"Smart TVs","brand":"Samsung","price":27990,"originalPrice":38990,"discount":28,"sku":"SKU-ELE-001","image":"https://images.unsplash.com/photo-1593359677879-a4bb92f829d1?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":25,"description":"Crisp 4K Crystal Processor, PurColor technology, and built-in Smart TV apps. Canteen special discounted rate.","features":["4K Crystal Processor","3 HDMI & 2 USB Ports","Dolby Digital Plus Sound","Voice Assistant Remote"],"specifications":{"Screen Size":"43 Inches","Resolution":"3840 x 2160","Warranty":"1 Year Comprehensive"},"featured":true,"newArrival":false},{"id":"SC-ELE-1002","name":"boAt Airdopes 141 True Wireless Earbuds with 42H Playtime","category":"Electronics","subcategory":"Audio","brand":"boAt","price":999,"originalPrice":2990,"discount":66,"sku":"SKU-ELE-002","image":"https://images.unsplash.com/photo-1590658268037-6bf12165a8df?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":120,"description":"Immersive sound with ASAP Fast Charge, ENx Noise Cancellation and IPX4 Sweat Resistance.","features":["42 Hours Total Playtime","8mm Drivers","Type-C Charging","Instant Wake N Pair"],"specifications":{"Bluetooth":"v5.1","Charging Time":"1 Hour","Warranty":"1 Year Brand"},"featured":true,"newArrival":true},{"id":"SC-ELE-1003","name":"JBL Flip 6 Wireless Portable Bluetooth Speaker 20W","category":"Electronics","subcategory":"Audio","brand":"JBL","price":8490,"originalPrice":11999,"discount":29,"sku":"SKU-ELE-003","image":"https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":18,"description":"Bold JBL Original Pro Sound with 2-way speaker system, IP67 waterproof and dustproof design.","features":["20W Powerful Output","12 Hours Playtime","IP67 Waterproof","PartyBoost Compatible"],"specifications":{"Battery":"4800 mAh","Weight":"550g","Warranty":"1 Year JBL Warranty"},"featured":false,"newArrival":false},{"id":"SC-ELE-9001","name":"Anchor by Panasonic 9W Cool Day Light LED Bulbs (Pack of 4)","category":"Electrical","subcategory":"LED Bulbs","brand":"Anchor","price":280,"originalPrice":480,"discount":41,"sku":"SKU-ELC-001","image":"https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":110,"description":"Bright 6500K cool day light with glare-free diffuser and surge protection up to 4kV.","features":["900 Lumens Output","6500K Cool White","B22 Cap Base","Surge Protection 4kV"],"specifications":{"Pack Quantity":"4 Bulbs","Life Span":"25,000 Hours","Warranty":"1 Year"},"featured":true,"newArrival":false},{"id":"SC-ELE-9002","name":"Havells 4-Socket Surge Protector Extension Board 2 Meter Wire","category":"Electrical","subcategory":"Extensions","brand":"Havells","price":490,"originalPrice":750,"discount":34,"sku":"SKU-ELC-002","image":"https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":40,"description":"Heavy duty copper wire extension with master LED switch and surge suppressor fuse.","features":["4 Universal Sockets","2 Meters Heavy Cord","Built-in Surge Fuse","Fire Retardant Shell"],"specifications":{"Max Load":"6 Amps / 1500W","Wire Material":"100% Copper","Warranty":"1 Year"},"featured":false,"newArrival":false},{"id":"SC-GRO-4001","name":"Fortune Sunlite Refined Sunflower Oil 5 Liter Jar","category":"Grocery","subcategory":"Edible Oils","brand":"Fortune","price":680,"originalPrice":850,"discount":20,"sku":"SKU-GRO-001","image":"https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":150,"description":"Rich in Vitamin E and Omega-6. Light and easy to digest for everyday health of the family.","features":["Light & Health Friendly","Enriched with Vitamins A & D","High Smoke Point","5L Handle Jar"],"specifications":{"Net Weight":"5 Liters","Storage":"Cool Dry Place","Shelf Life":"9 Months"},"featured":true,"newArrival":false},{"id":"SC-GRO-4002","name":"Aashirvaad Shudh Chakki Atta 10 Kg Bag","category":"Grocery","subcategory":"Atta & Flours","brand":"Aashirvaad","price":395,"originalPrice":470,"discount":16,"sku":"SKU-GRO-002","image":"https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":200,"description":"100% Pure Whole Wheat Atta made from high quality MP wheat. Soft, fluffy rotis guaranteed.","features":["100% Whole Wheat","Chakki Grinding Process","High Dietary Fiber","No Added Preservatives"],"specifications":{"Weight":"10 Kg","FSSAI License":"10012031000312","Shelf Life":"3 Months"},"featured":false,"newArrival":false},{"id":"SC-GRO-4003","name":"Tata Tea Premium Desh Ki Chai 1 Kg Pack","category":"Grocery","subcategory":"Tea & Coffee","brand":"Tata","price":430,"originalPrice":530,"discount":19,"sku":"SKU-GRO-003","image":"https://images.unsplash.com/photo-1576092768241-dec231879fc3?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":180,"description":"Blend of big CTC tea leaves for strong taste and small leaves for rich aroma.","features":["Dual Leaf Blend","Rich Taste & Strong Color","100% Assam Tea Selection","Fresh Flavor Retention"],"specifications":{"Weight":"1 Kg","Format":"Leaf Tea","Shelf Life":"12 Months"},"featured":false,"newArrival":true},{"id":"SC-HMA-2001","name":"Whirlpool 192 L 3 Star Direct-Cool Single Door Refrigerator","category":"Home Appliances","subcategory":"Refrigerators","brand":"Whirlpool","price":13990,"originalPrice":17850,"discount":22,"sku":"SKU-HMA-001","image":"https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":15,"description":"Auto-Connect to Home Inverter with Insulated Capillary Technology keeping ice cool up to 9 hours during power cuts.","features":["192 Liter Capacity","3 Star Energy Rating","Stabilizer Free Operation","Laminar Airflow"],"specifications":{"Capacity":"192L","Color":"Wine Radiant","Warranty":"10 Year Compressor Warranty"},"featured":true,"newArrival":false},{"id":"SC-HMA-2002","name":"LG 7.0 Kg 5 Star Semi-Automatic Top Load Washing Machine","category":"Home Appliances","subcategory":"Washing Machines","brand":"LG","price":11490,"originalPrice":15490,"discount":26,"sku":"SKU-HMA-002","image":"https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":10,"description":"Roller Jet Pulsator washing technology for tough stain removal with 3 wash program settings.","features":["7.0 Kg Capacity","5 Star Energy Efficiency","Wind Jet Dry System","Rat Away Technology"],"specifications":{"RPM":"1300 RPM","Body":"Rust Free Plastic","Warranty":"2 Years Product"},"featured":false,"newArrival":true},{"id":"SC-HMA-2003","name":"Bajaj PX 97 Torque New 36L Personal Air Cooler","category":"Home Appliances","subcategory":"Coolers","brand":"Bajaj","price":5790,"originalPrice":7990,"discount":28,"sku":"SKU-HMA-003","image":"https://images.unsplash.com/photo-1540324155974-7523202daa3f?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":30,"description":"Hexacool Technology with DuraMarine Pump for long lasting freshness and wide air throw.","features":["36L Tank Capacity","Anti-Bacterial Hexacool Pads","3-Speed Air Control","Castor Wheels"],"specifications":{"Air Throw":"30 Feet","Power":"100W","Warranty":"1 Year"},"featured":false,"newArrival":false},{"id":"SC-HOU-7001","name":"Cello Heavy Duty Plastic Bucket 25L with Mug 1.5L Set","category":"Household","subcategory":"Plasticware","brand":"Cello","price":340,"originalPrice":520,"discount":35,"sku":"SKU-HOU-001","image":"https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":90,"description":"Sturdy unbreakable virgin plastic body with comfortable metal handle for daily household use.","features":["25 Liter Heavy Bucket","1.5 Liter Free Mug","Unbreakable Virgin Plastic","Sturdy Steel Handle"],"specifications":{"Capacity":"25L Bucket + 1.5L Mug","Color":"Royal Blue","Warranty":"None"},"featured":false,"newArrival":false},{"id":"SC-KIT-3001","name":"Prestige Deluxe Alpha Stainless Steel Pressure Cooker 5 Liter","category":"Kitchen","subcategory":"Cookware","brand":"Prestige","price":1890,"originalPrice":2650,"discount":29,"sku":"SKU-KIT-001","image":"https://images.unsplash.com/photo-1585515320310-259814833e62?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":60,"description":"Alpha base suitable for induction & gas stove top cooking. Heavy duty stainless steel construction.","features":["Alpha Base Induction Bottom","Controlled Gasket Release","Unique Pressure Indicator","Comfortable Grip Handle"],"specifications":{"Capacity":"5 Liter","Material":"304 Stainless Steel","Warranty":"5 Years"},"featured":true,"newArrival":false},{"id":"SC-KIT-3002","name":"Milton Thermosteel Flip Lid Vacuum Flask 1000ml","category":"Kitchen","subcategory":"Flasks & Bottles","brand":"Milton","price":840,"originalPrice":1199,"discount":30,"sku":"SKU-KIT-002","image":"https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":85,"description":"Keeps beverages hot or cold for 24 hours. 100% Rust-proof 304 food grade stainless steel inside out.","features":["24H Temperature Retention","1000ml Capacity","Leak Proof Flip Lid","BPA Free Material"],"specifications":{"Capacity":"1000 ml","Body":"Stainless Steel","Warranty":"1 Year Warranty"},"featured":false,"newArrival":true},{"id":"SC-KIT-3003","name":"Pigeon by Stovekraft Non-Stick Cookware Set 3 Pieces","category":"Kitchen","subcategory":"Cookware","brand":"Pigeon","price":1250,"originalPrice":2495,"discount":50,"sku":"SKU-KIT-003","image":"https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":40,"description":"Includes Kadhai with Glass Lid (24cm), Fry Pan (24cm), and Flat Tawa (25cm). 5-layer Greblon coating.","features":["5-Layer German Non-stick Coating","Induction & Gas Compatible","Bakelite Handles","PFOA Free"],"specifications":{"Set Count":"3 Pieces","Color":"Red & Black","Warranty":"1 Year"},"featured":true,"newArrival":false},{"id":"SC-LIF-10001","name":"Aristocrat 65cm Medium Size Hard Cabin Trolley Bag","category":"Lifestyle","subcategory":"Luggage","brand":"Aristocrat","price":2390,"originalPrice":5990,"discount":60,"sku":"SKU-LIF-001","image":"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":20,"description":"Unbreakable scratch resistant Polycarbonate casing with 360-degree 8-wheel spinners.","features":["Polycarbonate Shell","360 Dual Spinner Wheels","Number Combination Lock","65cm Expandable"],"specifications":{"Weight":"3.2 Kg","Capacity":"60 Liters","Warranty":"7 Years International"},"featured":true,"newArrival":false},{"id":"SC-MOB-8001","name":"Mi 20000mAh Power Bank 3i with 18W Fast Charging","category":"Mobile & Accessories","subcategory":"Power Banks","brand":"Xiaomi","price":1899,"originalPrice":2499,"discount":24,"sku":"SKU-MOB-001","image":"https://images.unsplash.com/photo-1609592424109-dd9892f1b177?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":50,"description":"Triple output ports with dual input Type-C & Micro-USB ports. Advanced 12 layer circuit protection.","features":["20000 mAh Capacity","18W Two-Way Fast Charge","Triple Output Ports","Smart Power Management"],"specifications":{"Weight":"434g","Battery":"Lithium Polymer","Warranty":"6 Months"},"featured":true,"newArrival":false},{"id":"SC-MOB-8002","name":"Realme Narzo N53 8GB RAM 128GB Storage Gold","category":"Mobile & Accessories","subcategory":"Smartphones","brand":"Realme","price":8999,"originalPrice":12999,"discount":30,"sku":"SKU-MOB-002","image":"https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":12,"description":"50MP AI Camera, 33W SUPERVOOC Charging, and ultra-slim feather gold design with 90Hz display.","features":["50MP Primary AI Camera","33W Fast Charger Included","5000 mAh Battery","90Hz Smooth Display"],"specifications":{"RAM / Storage":"8GB / 128GB","Display":"6.74 Inch HD+","Warranty":"1 Year Phone"},"featured":false,"newArrival":true},{"id":"SC-OTH-12001","name":"Camlin Scholar Geometry Box & Mathematical Instrument Set","category":"Other Products","subcategory":"Stationery","brand":"Camlin","price":110,"originalPrice":160,"discount":31,"sku":"SKU-OTH-001","image":"https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":150,"description":"High precision compass and divider made from rust-free metal alloy with durable tin case.","features":["High Precision Metal Compass","Durable Tin Metal Box","Includes Eraser, Sharpener & Pencil","Rust Proof Markings"],"specifications":{"Items Included":"9 Pieces Set","Material":"Alloy Steel","Recommended Age":"6+"},"featured":false,"newArrival":false},{"id":"SC-PC-5001","name":"Dettol Original Germ Protection Soap (Buy 4 Get 1 Free - 125g each)","category":"Personal Care","subcategory":"Soaps & Hygiene","brand":"Dettol","price":215,"originalPrice":280,"discount":23,"sku":"SKU-PC-001","image":"https://images.unsplash.com/photo-1607006344380-b6775a0824a7?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":100,"description":"Trusted 99.9% germ protection soap bar with pine fragrance for daily bath hygiene.","features":["99.9% Germ Protection","Value Multipack","Dermatologically Tested","Fresh Pine Fragrance"],"specifications":{"Pack Count":"5 Bars","Weight":"125g per bar","Skin Type":"All"},"featured":true,"newArrival":false},{"id":"SC-PC-5002","name":"Head & Shoulders Anti-Dandruff Smooth & Silky Shampoo 650ml","category":"Personal Care","subcategory":"Hair Care","brand":"Head & Shoulders","price":460,"originalPrice":650,"discount":29,"sku":"SKU-PC-002","image":"https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d?auto=format&fit=crop&w=600&q=80","stockStatus":"In Stock","stockQuantity":75,"description":"Up to 100% flake-free hair with intensive moisturizers for soft, silky manageable tresses.","features":["Anti-Dandruff Formula","Smooth & Silky Finish","Gentle pH Balanced","650ml Pump Bottle"],"specifications":{"Volume":"650 ml","Hair Type":"Dandruff Prone","Shelf Life":"24 Months"},"featured":false,"newArrival":false}];
+    let currentCategory = 'All';
+    let searchQuery = '';
+    let cart = [];
+
+    const categories = ['All', 'Home Appliances', 'Kitchen', 'Grocery', 'Personal Care', 'Clothing', 'Mobile & Accessories', 'Electrical', 'Lifestyle', 'Cleaning'];
+
+    function init() {
+      renderCategories();
+      renderProducts();
+    }
+
+    function renderCategories() {
+      const container = document.getElementById('categoryContainer');
+      container.innerHTML = categories.map(cat => `
+        <button
+          onclick="selectCategory('${cat}')"
+          class="px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all ${
+            currentCategory === cat
+              ? 'bg-amber-500 text-slate-950 shadow-md'
+              : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+          }"
+        >
+          ${cat}
+        </button>
+      `).join('');
+    }
+
+    function selectCategory(cat) {
+      currentCategory = cat;
+      renderCategories();
+      renderProducts();
+    }
+
+    function filterProducts() {
+      searchQuery = document.getElementById('searchInput').value.toLowerCase();
+      renderProducts();
+    }
+
+    function syncMobileSearch() {
+      searchQuery = document.getElementById('mobileSearchInput').value.toLowerCase();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productGrid');
+      const filtered = ALL_PRODUCTS.filter(p => {
+        const matchesCategory = currentCategory === 'All' || p.category === currentCategory;
+        const matchesSearch = !searchQuery || 
+          p.name.toLowerCase().includes(searchQuery) ||
+          p.brand.toLowerCase().includes(searchQuery) ||
+          p.category.toLowerCase().includes(searchQuery) ||
+          p.sku.toLowerCase().includes(searchQuery);
+        return matchesCategory && matchesSearch;
+      });
+
+      document.getElementById('productCountBadge').innerText = filtered.length + ' Products';
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400">No products found matching your search.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => {
+        const isInCart = cart.some(item => item.id === p.id);
+        return `
+          <div class="bg-slate-900 border border-slate-800/80 hover:border-amber-500/40 rounded-2xl p-3.5 flex flex-col justify-between shadow-lg transition-all group">
+            <div>
+              <div class="relative w-full h-36 rounded-xl overflow-hidden bg-slate-950 mb-3">
+                <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <span class="absolute top-2 left-2 bg-amber-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow">${p.discount}% OFF</span>
+              </div>
+              <span class="text-[10px] font-mono text-amber-400 font-bold">${p.sku}</span>
+              <h3 class="text-xs font-bold text-white line-clamp-2 mt-0.5 group-hover:text-amber-300 transition-colors">${p.name}</h3>
+              <p class="text-[11px] text-slate-400 mt-0.5">${p.brand} • ${p.category}</p>
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-slate-800 space-y-2">
+              <div class="flex items-baseline justify-between">
+                <div>
+                  <span class="text-sm font-extrabold text-amber-400">₹${p.price.toLocaleString('en-IN')}</span>
+                  <span class="text-[10px] text-slate-500 line-through ml-1">₹${p.originalPrice.toLocaleString('en-IN')}</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 gap-2">
+                <button
+                  onclick="addToCart('${p.id}')"
+                  class="py-2 px-1 rounded-lg text-xs font-bold ${
+                    isInCart
+                      ? 'bg-emerald-600 text-white'
+                      : 'bg-amber-500 hover:bg-amber-400 text-slate-950'
+                  } transition-all shadow"
+                >
+                  ${isInCart ? 'In Cart ✓' : '+ Add Cart'}
+                </button>
+                <a
+                  href="https://wa.me/919508600190?text=Hello%20Sainik%20Canteen%20Bikram,%20I%20am%20interested%20in%20${encodeURIComponent(p.name)}%20(SKU:%20${p.sku})"
+                  target="_blank"
+                  class="py-2 px-1 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 text-center transition-all flex items-center justify-center gap-1"
+                >
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToCart(id) {
+      const product = ALL_PRODUCTS.find(p => p.id === id);
+      if (!product) return;
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({ ...product, quantity: 1 });
+      }
+      updateCartUI();
+      renderProducts();
+    }
+
+    function updateCartUI() {
+      const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+      document.getElementById('cartBadge').innerText = count;
+
+      const container = document.getElementById('cartItemsList');
+      if (cart.length === 0) {
+        container.innerHTML = `<div class="text-center text-slate-500 py-10 text-xs">Your cart is empty.</div>`;
+        document.getElementById('cartTotalPrice').innerText = '₹0';
+        return;
+      }
+
+      let total = 0;
+      container.innerHTML = cart.map(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        return `
+          <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between gap-3 text-xs">
+            <div class="flex-1">
+              <h4 class="font-bold text-white line-clamp-1">${item.name}</h4>
+              <p class="text-amber-400 font-bold mt-0.5">₹${item.price.toLocaleString('en-IN')} x ${item.quantity}</p>
+            </div>
+            <button onclick="removeFromCart('${item.id}')" class="text-red-400 hover:text-red-300 p-1">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cartTotalPrice').innerText = '₹' + total.toLocaleString('en-IN');
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      updateCartUI();
+      renderProducts();
+    }
+
+    function toggleCart() {
+      const drawer = document.getElementById('cartDrawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function sendCartWhatsApp() {
+      if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+      }
+      let msg = "*SAINIK CANTEEN BIKRAM - CART ORDER*\n";
+      msg += "----------------------------------------\n";
+      let total = 0;
+      cart.forEach((item, idx) => {
+        const sub = item.price * item.quantity;
+        total += sub;
+        msg += `${idx + 1}. *${item.name}* (SKU: ${item.sku})\n   Qty: ${item.quantity} | Price: ₹${sub.toLocaleString('en-IN')}\n`;
+      });
+      msg += "----------------------------------------\n";
+      msg += `*Total Estimated Amount:* ₹${total.toLocaleString('en-IN')}\n`;
+      msg += "*Please confirm stock availability and final order details. Thank you!*";
+
+      window.open('https://wa.me/919508600190?text=' + encodeURIComponent(msg), '_blank');
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
